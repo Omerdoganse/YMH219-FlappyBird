@@ -81,6 +81,6 @@ FlappyBird/
 
 ## Öğrenci Bilgileri
 
-- **Ad Soyad:** _<ADINIZ SOYADINIZ>_
-- **Öğrenci No:** _<ÖĞRENCİ NUMARANIZ>_
+- **Ad Soyad:** Ömer Doğan
+- **Öğrenci No:** 250541101
 - **Ders:** Nesne Tabanlı Programlama (YMH 219)
