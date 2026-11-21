@@ -12,6 +12,7 @@ public class GameForm : Form
     private const int CanvasWidth = 480;
     private const int CanvasHeight = 640;
 
+    private readonly HighScoreStore _highScoreStore = new();
     private readonly GameEngine _engine;
     private readonly System.Windows.Forms.Timer _gameTimer;
     private readonly GameCanvas _canvas;
@@ -64,9 +65,10 @@ public class GameForm : Form
         ClientSize = new Size(CanvasWidth, CanvasHeight + topPanel.Height);
 
         // --- Oyun motoru ---
-        _engine = new GameEngine(CanvasWidth, CanvasHeight);
+        _engine = new GameEngine(CanvasWidth, CanvasHeight, _highScoreStore.Load());
         _engine.ScoreChanged += (_, _) => UpdateInfoLabels();
         _engine.StateChanged += (_, _) => UpdatePauseButton();
+        _engine.GameEnded += Engine_GameEnded;
 
         // --- Oyun döngüsü (yaklaşık 60 FPS) ---
         _gameTimer = new System.Windows.Forms.Timer { Interval = 16 };
@@ -103,6 +105,14 @@ public class GameForm : Form
     {
         _engine.Update();
         _canvas.Invalidate();
+    }
+
+    private void Engine_GameEnded(object? sender, EventArgs e)
+    {
+        UpdateInfoLabels();
+        if (_engine.Score > 0 && _engine.Score >= _engine.HighScore && !_highScoreStore.Save(_engine.HighScore))
+            MessageBox.Show("En yüksek skor dosyaya kaydedilemedi.", "Uyarı",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 
     private void StartNewGame()
